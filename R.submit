@@ -1,13 +1,13 @@
 universe = vanilla
- 
+
 Executable = R-wrapper.sh
-arguments = mcpi.R
-transfer_input_files = mcpi.R 
+arguments = mcpi.R $(Process)
+transfer_input_files = mcpi.R
 
 output = job.out.$(Cluster).$(Process)
 error = job.error.$(Cluster).$(Process)
 log = job.log.$(Cluster).$(Process)
 
 requirements = (HAS_CVMFS_oasis_opensciencegrid_org =?= TRUE)
-queue 1000
+queue 10
 
