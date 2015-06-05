@@ -1,7 +1,5 @@
 # Scaling up compute resources - R example
 
-Table of Contents
-=================
 
   * [Scaling up compute resources - R example](#scaling-up-compute-resources---r-example)
         * [Objectives](#objectives)
