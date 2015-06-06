@@ -1,20 +1,18 @@
 # Scaling up compute resources - R example
 
-
-  * [Scaling up compute resources - R example](#scaling-up-compute-resources---r-example)
-        * [Objectives](#objectives)
-    * [Overview](#overview)
-    * [Submitting jobs concurrently](#submitting-jobs-concurrently)
-    * [Interlude: utilization plots](#interlude-utilization-plots)
-    * [Connect Histogram](#connect-histogram)
-        * [Key Points](#key-points)
-    * [Help](#help)
+ * [Objectives](#objectives)
+ * [Overview](#overview)
+ * [Submitting jobs concurrently](#submitting-jobs-concurrently)
+ * [Interlude: utilization plots](#interlude-utilization-plots)
+ * [Connect Histogram](#connect-histogram)
+ * [Key Points](#key-points)
+ * [Getting Help](#getting-help)
 
 
-### Objectives
-*   Learn why to scale up the computational resources.
-*   Learn how to scaling up the computational resources
-</div>
+## Objectives
+- [x] Learn why to scale up the computational resources.
+- [x] Learn how to scaling up the computational resources
+
 
 ## Overview
 
@@ -158,15 +156,12 @@ cinvestav.mx                      |1 (1.00%)   ▊
 ```
 
 
-### Key Points
-*    Scaling up the computational resources on OSG is crucial to taking full advantage of grid computing.
-*    Changing the value of *Queue* allows the user to scale up the resources.
-*    *Arguments* allows you to pass parameters to a job script.
-*    $(Cluster) and $(Process) can be used to name log files uniquely.
-*    `connect histogram` gives a nice plot of resource assignments.
-*    Your OSG Connect home page gives other useful plots.
+## Key Points
+- [x] Scaling up the computational resources on OSG is crucial to taking full advantage of grid computing.
+- [x] Changing the value of `Queue` allows the user to scale up the resources.
+- [x] `Arguments` allows you to pass parameters to a job script.
+- [x] `$(Cluster)` and `$(Process)` can be used to name log files uniquely.
+- [x] `connect histogram` gives a nice plot of resource assignments.
 
-## Help
-For further assistance or questions, please email ***connect-support@opensciencegrid.org***
-
-
+## Getting Help
+For assistance or questions, please email the OSG User Support team  at `user-support@opensciencegrid.org` or visit the [help desk and community forums](http://support.opensciencegrid.org).
