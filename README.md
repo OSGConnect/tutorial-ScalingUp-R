@@ -93,7 +93,7 @@ progress. Execute the following bash script to compute the average from all the 
 Once the jobs are completed, you might want to invoke the script 
 
 ```
-$mcpi_ave.bash
+$ mcpi_ave.bash
 ```
 
 to compute the average value of pi from all the available outputs.  
