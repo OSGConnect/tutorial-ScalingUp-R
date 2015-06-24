@@ -32,8 +32,10 @@ In this section, we will see how to scale up the calculations with
 simple example. Once we understand the basic HTCondor script, it is easy
 to scale up.
 
-	$ tutorial ScalingUp-R
-	$ cd ScalingUp-R
+```
+$ tutorial ScalingUp-R
+$ cd ScalingUp-R
+```
 
 As we discussed in the previous section on HTCondor scripts, we need to
 prepare the job execution and the job submission scripts. Here again
@@ -45,6 +47,7 @@ If we want to submit several jobs, we need to track log, out and error  files fo
 job. An easy way to do this is to add the $(Cluster) and $(Process)
 macros to the HTCondor submit file. 
 
+```
 	universe = vanilla
 	
 	Executable = R-wrapper.sh
@@ -57,16 +60,19 @@ macros to the HTCondor submit file.
 	
 	requirements = (HAS_CVMFS_oasis_opensciencegrid_org =?= TRUE)   # Checks if OASIS available
 	queue 100
-	
+```
+
 Note the `Queue 100`.  This tells Condor to enqueue 100 copies of this job
 as one cluster.  
 
 Let us take a look at the execution script, R-wrapper.sh
 
+```
 	#!/bin/bash
 	  source /cvmfs/oasis.opensciencegrid.org/osg/modules/lmod/5.6.2/init/bash
 	  module load R
 	  Rscript $1 > mcpi.$2.out
+```
 
 The wrapper loads the R module and then executes the script with Rscript utility. From the submit 
 file described above, the first argument is the name of the R program - mcpi.R and the second argument is the process number. The process number is a sequence of integers and used here to name the output
@@ -75,16 +81,20 @@ files.
 
 You'll see something like the following upon submission:
 
+```
 	$ condor_submit R.submit
 	Submitting job(s).........................
 	100 job(s) submitted to cluster 837.
+```
 
 Apply your `condor_q` and `connect watch` knowledge to see this job
 progress. Execute the following bash script to compute the average from all the jobs.
 
 Once the jobs are completed, you might want to invoke the script 
 
+```
 	$mcpi_ave.bash
+```
 
 to compute the average value of pi from all the available outputs.  
 
@@ -105,6 +115,7 @@ We're waiting on 1,000 jobs.  Let's use `connect watch` to
 watch for job completions.  As soon as you see some jobs enter R state
 (running), press control-C, and let's introduce a new command:
 
+```
 	$ connect histogram
 	Val                               |Ct (Pct)    Histogram
 	unl.edu                           |46 (68.66%) ████████████████████████████████▏
@@ -116,6 +127,7 @@ watch for job completions.  As soon as you see some jobs enter R state
 	CRUSH-OSG-10-5-10-33              |1 (1.49%)   ▊
 	iu.edu                            |1 (1.49%)   ▊
 	vt.edu                            |1 (1.49%)   ▊
+```
 
 This command gives us a simple histogram of where on the grid our jobs
 are running.  The column on the left is (for the most) a list of _sites_
@@ -130,6 +142,7 @@ them 69% (46 of 67) are running at University of Nebraska at Lincoln.
 they no longer appear.  How to see where jobs have already run? `connect
 histogram --last` shows the run sites of your *last* job cluster.
 
+```
 	$ connect histogram --last
 	Val                               |Ct (Pct)    Histogram
 	uc3                               |49 (49.00%) ████████████████████████████████▏
@@ -140,7 +153,7 @@ histogram --last` shows the run sites of your *last* job cluster.
 	c5a-s22.ufhpc                     |3 (3.00%)   ██
 	LCS-215-021-S2-its-c6-osg-20141013|3 (3.00%)   ██
 	cinvestav.mx                      |1 (1.00%)   ▊
-
+```
 
 ## Key Points
 - [x] Scaling up the computational resources on OSG is crucial to taking full advantage of grid computing.
