@@ -1,12 +1,6 @@
-# Scaling up compute resources - R example
+[title]: - "Scaling up compute resources - R example"
 
- * [Objectives](#objectives)
- * [Overview](#overview)
- * [Submitting jobs concurrently](#submitting-jobs-concurrently)
- * [Interlude: utilization plots](#interlude-utilization-plots)
- * [Connect Histogram](#connect-histogram)
- * [Key Points](#key-points)
- * [Getting Help](#getting-help)
+ 
 
 
 ## Objectives
