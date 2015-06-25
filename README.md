@@ -1,4 +1,5 @@
 [title]: - "Scaling up compute resources - R example"
+[TOC]
 
 ## Overview
 
