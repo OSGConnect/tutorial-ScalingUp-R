@@ -1,13 +1,5 @@
 [title]: - "Scaling up compute resources - R example"
 
- 
-
-
-## Objectives
-- [x] Learn why to scale up the computational resources.
-- [x] Learn how to scaling up the computational resources
-
-
 ## Overview
 
 Scaling up the computational resources is a big advantage for doing
@@ -36,7 +28,7 @@ is our job execution script:
 ## Submitting jobs concurrently
 
 If we want to submit several jobs, we need to track log, out and error  files for each
-job. An easy way to do this is to add the $(Cluster) and $(Process)
+job. An easy way to do this is to add the `$(Cluster)` and `$(Process)`
 macros to the HTCondor submit file. 
 
 	universe = vanilla
@@ -55,15 +47,15 @@ macros to the HTCondor submit file.
 Note the `Queue 100`.  This tells Condor to enqueue 100 copies of this job
 as one cluster.  
 
-Let us take a look at the execution script, R-wrapper.sh
+Let us take a look at the execution script, `R-wrapper.sh`
 
 	#!/bin/bash
 	source /cvmfs/oasis.opensciencegrid.org/osg/modules/lmod/5.6.2/init/bash
 	module load R
 	Rscript $1 > mcpi.$2.out
 
-The wrapper loads the R module and then executes the script with Rscript utility. From the submit 
-file described above, the first argument is the name of the R program - mcpi.R and the second argument is the process number. The process number is a sequence of integers and used here to name the output
+The wrapper loads the R module and then executes the script with `Rscript` utility. From the submit 
+file described above, the first argument is the name of the R program - `mcpi.R` and the second argument is the process number. The process number is a sequence of integers and used here to name the output
 files. 
 
 
@@ -143,4 +135,4 @@ histogram --last` shows the run sites of your *last* job cluster.
 - [x] `connect histogram` gives a nice plot of resource assignments.
 
 ## Getting Help
-For assistance or questions, please email the OSG User Support team  at `user-support@opensciencegrid.org` or visit the [help desk and community forums](http://support.opensciencegrid.org).
+For assistance or questions, please email the OSG User Support team  at <mailto:user-support@opensciencegrid.org> or visit the [help desk and community forums](http://support.opensciencegrid.org).
