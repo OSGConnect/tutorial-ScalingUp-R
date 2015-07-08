@@ -20,7 +20,7 @@ simple example. Once we understand the basic HTCondor script, it is easy
 to scale up.
 
 	$ tutorial ScalingUp-R
-	$ cd ScalingUp-R
+	$ cd tutorial-ScalingUp-R
 
 As we discussed in the previous section on HTCondor scripts, we need to
 prepare the job execution and the job submission scripts. Here again
