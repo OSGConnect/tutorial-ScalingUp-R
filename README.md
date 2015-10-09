@@ -1,6 +1,7 @@
 [title]: - "Scaling up compute resources - R example"
 [TOC]
 
+
 ## Overview
 
 Scaling up the computational resources is a big advantage for doing
