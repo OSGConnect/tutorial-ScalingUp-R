@@ -70,12 +70,6 @@ You'll see something like the following upon submission:
 Apply your `condor_q` and `connect watch` knowledge to see this job
 progress. Execute the following bash script to compute the average from all the jobs.
 
-Once the jobs are completed, you might want to invoke the script 
-
-	$ mcpi_ave.bash
-
-to compute the average value of pi from all the available outputs.  
-
 ## Interlude: utilization plots
 
 Before we continue, let's look at a URL: [your OSG Connect home
@@ -128,6 +122,17 @@ histogram --last` shows the run sites of your *last* job cluster.
 	c5a-s22.ufhpc                     |3 (3.00%)   ██
 	LCS-215-021-S2-its-c6-osg-20141013|3 (3.00%)   ██
 	cinvestav.mx                      |1 (1.00%)   ▊
+
+## Post process⋅
+
+Once the jobs are completed, you might want to invoke the script⋅
+
+~~~
+$mcpi_ave.bash
+~~~
+
+to compute the average value of pi from all the available outputs.⋅⋅
+
 
 ## Key Points
 - [x] Scaling up the computational resources on OSG is crucial to taking full advantage of grid computing.
