@@ -20,8 +20,8 @@ In this section, we will see how to scale up the calculations with
 simple example. Once we understand the basic HTCondor script, it is easy
 to scale up.
 
-	$ tutorial ScalingUp-R
-	$ cd tutorial-ScalingUp-R
+    $ tutorial ScalingUp-R
+    $ cd tutorial-ScalingUp-R
 
 As we discussed in the previous section on HTCondor scripts, we need to
 prepare the job execution and the job submission scripts. Here again
@@ -39,9 +39,9 @@ macros to the HTCondor submit file.
 	arguments = mcpi.R $(Process)
 	transfer_input_files = mcpi.R     # mcpi.R is the R program we want to run
 		
-	output = job.out.$(Cluster).$(Process)  
-	error = job.error.$(Cluster).$(Process)
-	log = job.log.$(Cluster).$(Process)
+	output = Log/job.out.$(Cluster).$(Process)  
+	error = Log/job.error.$(Cluster).$(Process)
+	log = Log/job.log.$(Cluster).$(Process)
 		
 	requirements = (HAS_CVMFS_oasis_opensciencegrid_org =?= TRUE)   # Checks if OASIS available
 	queue 100
@@ -52,7 +52,7 @@ as one cluster.
 Let us take a look at the execution script, `R-wrapper.sh`
 
 	#!/bin/bash
-	source /cvmfs/oasis.opensciencegrid.org/osg/modules/lmod/5.6.2/init/bash
+	source /cvmfs/oasis.opensciencegrid.org/osg/modules/lmod/current/init/bash
 	module load R
 	Rscript $1 > mcpi.$2.out
 
