@@ -1,13 +1,36 @@
-universe = vanilla
+# The UNIVERSE defines an execution environment. You will almost always use VANILLA.
+Universe = vanilla
 
-Executable = R-wrapper.sh
+# These are good base requirements for your jobs on OSG. It is specific on OS and
+# OS version, core cound and memory, and wants to use the software modules. 
+Requirements = OSGVO_OS_STRING == "RHEL 6" && HAS_MODULES == True
+request_cpus = 1
+request_memory = 1 GB
+
+# executable is the program your job will run It's often useful
+# to create a shell script to "wrap" your actual work.
+executable = R-wrapper.sh
 arguments = mcpi.R $(Process)
+
+# files transferred into the job sandbox
 transfer_input_files = mcpi.R
 
+# error and output are the error and output channels from your job
+# that HTCondor returns from the remote host.
 output = Log/job.out.$(Cluster).$(Process)
 error = Log/job.error.$(Cluster).$(Process)
+
+# The log file is where HTCondor places information about your
+# job's status, success, and resource consumption.
 log = Log/job.log.$(Cluster).$(Process)
 
-requirements = (HAS_CVMFS_oasis_opensciencegrid_org =?= TRUE)
+# Send the job to Held state on failure. 
+on_exit_hold = (ExitBySignal == True) || (ExitCode != 0)  
+
+# Periodically retry the jobs every 60 seconds, up to a maximum of 5 retries.
+periodic_release =  (NumJobStarts < 5) && ((CurrentTime - EnteredCurrentStatus) > 60)
+
+# Queue is the "start button" - it launches any jobs that have been
+# specified thus far.
 queue 100
 
