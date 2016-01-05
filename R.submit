@@ -3,7 +3,7 @@ Universe = vanilla
 
 # These are good base requirements for your jobs on OSG. It is specific on OS and
 # OS version, core cound and memory, and wants to use the software modules. 
-Requirements = OSGVO_OS_STRING == "RHEL 6" && HAS_MODULES == True
+Requirements = OSGVO_OS_STRING == "RHEL 6" && TARGET.Arch == "X86_64" && HAS_MODULES == True && HAS_FILE_usr_lib64_libgfortran_so_3 == True
 request_cpus = 1
 request_memory = 1 GB
 
