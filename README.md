@@ -130,5 +130,7 @@ To see this, we can use the command:
 - [x] `$(Cluster)` and `$(Process)` can be used to name log files uniquely.
 
 ## Getting Help
+
 For assistance or questions, please email the OSG User Support team at 
 <mailto:support@osgconnect.net> or visit the [help desk](http://support.opensciencegrid.org).
+
