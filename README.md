@@ -20,126 +20,115 @@ In this section, we will see how to scale up the calculations with
 simple example. Once we understand the basic HTCondor script, it is easy
 to scale up.
 
-    $ tutorial ScalingUp-R
+### Background
+
+For this example, we will use computational methods to estimate pi. First,
+we will define a square inscribed by a unit circle from which we will 
+randomly sample points. The ratio of the points outside the circle to 
+the points in the circle is calculated which approaches pi/4. 
+
+This method converges extremely slowly, which makes it great for a 
+CPU-intensive exercise (but bad for a real estimation!).
+
+## Set up an R Job
+
+First, we'll need to create a working directory, you can either run 
+`$ tutorial ScalingUp-R` or type the following:
+
+    $ mkdir tutorial-ScalingUp-R
     $ cd tutorial-ScalingUp-R
 
-As we discussed in the previous section on HTCondor scripts, we need to
-prepare the job execution and the job submission scripts. Here again
-is our job execution script:
+### Test the R Script
 
-## Submitting jobs concurrently
+Create an R script by typing the following into a file called `mcpi.R`:
 
-If we want to submit several jobs, we need to track log, out and error  files for each
-job. An easy way to do this is to add the `$(Cluster)` and `$(Process)`
-macros to the HTCondor submit file. 
+	montecarloPi <- function(trials) {
+	  count = 0
+	  for(i in 1:trials) {
+	    if((runif(1,0,1)^2 + runif(1,0,1)^2)<1) {
+	      count = count + 1
+		    }
+	  }
+	  return((count*4)/trials)
+	}
+	
+	montecarloPi(1000)
 
-	universe = vanilla
-		
-	Executable = R-wrapper.sh
+Now, test your R script to ensure it runs as expected:
+
+	$ module load r
+	$ Rscript --no-save mcpi.R
+	[1] 3.14
+
+Excellent. Now we can begin building the necessary scripts so we can run the 
+jobs on OSG.
+
+### Build the HTCondor Job
+
+As discussed in the Run R Jobs tutorial, we need to prepare the job 
+execution and the job submission scripts. First, make a wrapper script 
+called `R-wrapper.sh`. 
+
+	#!/bin/bash
+
+	module load r
+	Rscript --no-save mpi.R
+
+This script will load the required module and execute our R script.
+
+Test the wrapper script to ensure it works:
+
+	$ ./R-wrapper.sh mcpi.R
+	[1] 3.14524
+
+Now that we have both our R script and wrapper script written and tested, 
+we can begin building the submit file for our job. If we want to submit several 
+jobs, we need to track log, out and error files for each
+job. An easy way to do this is to use the Cluster and Process ID
+values to create unique files for each process in our job.
+
+Create a submit file named `R.submit`:
+
+	executable = R-wrapper.sh
 	arguments = mcpi.R $(Process)
 	transfer_input_files = mcpi.R     # mcpi.R is the R program we want to run
 		
-	output = Log/job.out.$(Cluster).$(Process)  
-	error = Log/job.error.$(Cluster).$(Process)
-	log = Log/job.log.$(Cluster).$(Process)
+	log = log/job.log.$(Cluster).$(Process)
+	error = log/job.error.$(Cluster).$(Process)
+	output = log/job.out.$(Cluster).$(Process)  
 		
-	requirements = (HAS_CVMFS_oasis_opensciencegrid_org =?= TRUE)   # Checks if OASIS available
+	requirements = HAS_MODULES == True && OSGVO_OS_STRING == "RHEL 7" && Arch == "X86_64"
 	queue 100
 
-Note the `Queue 100`.  This tells Condor to enqueue 100 copies of this job
-as one cluster.  
+Note the `queue 100`.  This tells Condor to enqueue 100 copies of this job
+as one cluster. Also, notice the use of `$(Cluster)` and `$(Process)` to specify unique 
+output files. HTCondor will replace these with the Cluster and Process ID numbers for each 
+individual process within the cluster.
 
-Let us take a look at the execution script, `R-wrapper.sh`
-
-	#!/bin/bash
-	source /cvmfs/oasis.opensciencegrid.org/osg/modules/lmod/current/init/bash
-	module load R
-	Rscript $1 > mcpi.$2.out
-
-The wrapper loads the R module and then executes the script with `Rscript` utility. From the submit 
-file described above, the first argument is the name of the R program - `mcpi.R` and the second argument is the process number. The process number is a sequence of integers and used here to name the output
-files. 
-
-
-You'll see something like the following upon submission:
+Now it is time to submit our job! You'll see something like the following upon submission:
 
 	$ condor_submit R.submit
 	Submitting job(s).........................
 	100 job(s) submitted to cluster 837.
 
 Apply your `condor_q` and `connect watch` knowledge to see this job
-progress. Execute the following bash script to compute the average from all the jobs.
+progress. Check your `log` folder to see the individual output files.
 
-## Interlude: utilization plots
+### Post process⋅
 
-Before we continue, let's look at a URL: [your OSG Connect home
-page](http://osgconnect.net/home).  If you have not signed in, you'll be
-redirected back to the main site.  Sign In as you did the first time you
-signed up, and then click again on the
-[your OSG Connect home link](http://osgconnect.net/home).
+Once the jobs are completed, you can use the information in the output files 
+to calculate an average of all of our computed estimates of Pi.
 
-You see a number of graphs and plots here showing things happening
-in OSG Connect.  We'll go over these briefly, then return later.
+To see this, we can use the command:
 
-## Connect Histogram 
-
-We're waiting on 1,000 jobs.  Let's use `connect watch` to
-watch for job completions.  As soon as you see some jobs enter R state
-(running), press control-C, and let's introduce a new command:
-
-	$ connect histogram
-	Val                               |Ct (Pct)    Histogram
-	unl.edu                           |46 (68.66%) ████████████████████████████████▏
-	bu.edu                            |13 (19.40%) █████████▏
-	uconn.edu                         |2 (2.99%)   █▌
-	CRUSH-OSG-10-5-220-34             |1 (1.49%)   ▊
-	ufhpc                             |1 (1.49%)   ▊
-	LAW-D-SBA01-S2-its-c6-osg-20141013|1 (1.49%)   ▊
-	CRUSH-OSG-10-5-10-33              |1 (1.49%)   ▊
-	iu.edu                            |1 (1.49%)   ▊
-	vt.edu                            |1 (1.49%)   ▊
-
-This command gives us a simple histogram of where on the grid our jobs
-are running.  The column on the left is (for the most) a list of _sites_
-that OSG jobs run on.  At times we don't correctly group job locations
-together. For example, the two rows for CRUSH-* above are really the
-same site, but histogram doesn't know about that site (yet) so it
-displays as two.  But most of the big sites are mapped correctly.  You
-see that in my case, 67 of my 100 jobs have begun running, and among
-them 69% (46 of 67) are running at University of Nebraska at Lincoln.
-
-`connect histogram` gives metrics on current jobs.  As jobs complete,
-they no longer appear.  How to see where jobs have already run? `connect
-histogram --last` shows the run sites of your *last* job cluster.
-
-	$ connect histogram --last
-	Val                               |Ct (Pct)    Histogram
-	uc3                               |49 (49.00%) ████████████████████████████████▏
-	bu.edu                            |21 (21.00%) █████████████▊
-	uconn.edu                         |11 (11.00%) ███████▎
-	unl.edu                           |9 (9.00%)   ██████
-	mwt2.org                          |3 (3.00%)   ██
-	c5a-s22.ufhpc                     |3 (3.00%)   ██
-	LCS-215-021-S2-its-c6-osg-20141013|3 (3.00%)   ██
-	cinvestav.mx                      |1 (1.00%)   ▊
-
-## Post process⋅
-
-Once the jobs are completed, you might want to invoke the script⋅
-
-~~~
-$mcpi_ave.bash
-~~~
-
-to compute the average value of pi from all the available outputs.⋅⋅
-
+	$ cat mcpi*.out | awk '{ sum += $2; print $2"   "NR} END { print "---------------\n Grand Average = " sum/NR }'
 
 ## Key Points
 - [x] Scaling up the computational resources on OSG is crucial to taking full advantage of grid computing.
 - [x] Changing the value of `Queue` allows the user to scale up the resources.
 - [x] `Arguments` allows you to pass parameters to a job script.
 - [x] `$(Cluster)` and `$(Process)` can be used to name log files uniquely.
-- [x] `connect histogram` gives a nice plot of resource assignments.
 
 ## Getting Help
-For assistance or questions, please email the OSG User Support team  at <mailto:user-support@opensciencegrid.org> or visit the [help desk and community forums](http://support.opensciencegrid.org).
+For assistance or questions, please email the OSG User Support team at 
+<mailto:support@osgconnect.net> or visit the [help desk](http://support.opensciencegrid.org).
