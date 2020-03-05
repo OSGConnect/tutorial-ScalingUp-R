@@ -72,7 +72,7 @@ called `R-wrapper.sh`.
 	#!/bin/bash
 
 	module load r
-	Rscript --no-save mpi.R
+	Rscript --no-save mcpi.R
 
 This script will load the required module and execute our R script.
 
@@ -133,4 +133,3 @@ To see this, we can use the command:
 
 For assistance or questions, please email the OSG User Support team at 
 <mailto:support@osgconnect.net> or visit the [help desk](http://support.opensciencegrid.org).
-
