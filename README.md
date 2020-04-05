@@ -60,8 +60,11 @@ Now, test your R script to ensure it runs as expected:
 	$ Rscript --no-save mcpi.R
 	[1] 3.14
 
-Excellent. Now we can begin building the necessary scripts so we can run the 
-jobs on OSG.
+If we were running a more intensive script, we would want to test our pipeline 
+with a shortened, test script first.
+
+Now that we know our script works as expected, we can begin building the 
+necessary scripts so we can run the jobs on OSG.
 
 ### Build the HTCondor Job
 
@@ -103,7 +106,10 @@ Create a submit file named `R.submit`:
 Note the `queue 100`.  This tells Condor to enqueue 100 copies of this job
 as one cluster. Also, notice the use of `$(Cluster)` and `$(Process)` to specify unique 
 output files. HTCondor will replace these with the Cluster and Process ID numbers for each 
-individual process within the cluster.
+individual process within the cluster. Let's make the `log` directory that will 
+hold these files for us.
+
+	$ mkdir log
 
 Now it is time to submit our job! You'll see something like the following upon submission:
 
