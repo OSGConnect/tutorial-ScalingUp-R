@@ -138,4 +138,4 @@ To see this, we can use the command:
 ## Getting Help
 
 For assistance or questions, please email the OSG User Support team at 
-<mailto:support@osgconnect.net> or visit the [help desk](http://support.opensciencegrid.org).
+<mailto:support@opensciencegrid.org>.
