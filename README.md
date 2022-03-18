@@ -73,6 +73,9 @@ execution and the job submission scripts. First, make a wrapper script
 called `R-wrapper.sh`. 
 
 	#!/bin/bash
+	
+	# set TMPDIR variable
+	export TMPDIR=$_CONDOR_SCRATCH_DIR
 
 	module load r
 	Rscript --no-save mcpi.R
