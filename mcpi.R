@@ -1,5 +1,5 @@
-args = commandArgs(trailingOnly = true)
-iternum = as.numeric(args[[1]])+1
+args = commandArgs(trailingOnly = TRUE)
+iternum = as.numeric(args[[1]]) + 100
 
 montecarloPi <- function(trials) {
   count = 0
