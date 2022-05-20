@@ -94,15 +94,16 @@ values to create unique files for each process in our job.
 
 Create a submit file named `R.submit`:
 
+	+SingularityImage = "/cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0"
+
 	executable = R-wrapper.sh
-	arguments = mcpi.R $(Process)
+	arguments = $(Process)
 	transfer_input_files = mcpi.R    
 		
 	log = log/job.log.$(Cluster).$(Process)
 	error = log/job.error.$(Cluster).$(Process)
-	output = log/job.out.$(Cluster).$(Process)  
-		
-	requirements = HAS_MODULES == True && OSGVO_OS_STRING == "RHEL 7" && Arch == "X86_64"
+	output = log/mcpi.out.$(Cluster).$(Process)  
+	
 	queue 100
 
 Note the `queue 100`.  This tells Condor to enqueue 100 copies of this job
@@ -121,7 +122,7 @@ Now it is time to submit our job! You'll see something like the following upon s
 	Submitting job(s).........................
 	100 job(s) submitted to cluster 837.
 
-Apply your `condor_q` and `connect watch` knowledge to see this job
+Apply your `condor_q` knowledge to see this job
 progress. Check your `log` folder to see the individual output files.
 
 ## Post Process⋅
@@ -131,7 +132,7 @@ to calculate an average of all of our computed estimates of Pi.
 
 To see this, we can use the command:
 
-	$ cat mcpi*.out | awk '{ sum += $2; print $2"   "NR} END { print "---------------\n Grand Average = " sum/NR }'
+	$ cat log/mcpi*.out* | awk '{ sum += $2; print $2"   "NR} END { print "---------------\n Grand Average = " sum/NR }'
 
 # Key Points
 
