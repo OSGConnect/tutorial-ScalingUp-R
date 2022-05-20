@@ -1,3 +1,6 @@
+args = commandArgs(trailingOnly = TRUE)
+iternum = as.numeric(args[[1]]) + 100
+
 montecarloPi <- function(trials) {
   count = 0
   for(i in 1:trials) {
@@ -8,4 +11,4 @@ montecarloPi <- function(trials) {
   return((count*4)/trials)
 }
  
-montecarloPi(1000)
+montecarloPi(iternum)

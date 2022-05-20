@@ -2,7 +2,7 @@
 [TOC]
 
 
-## Overview
+# Overview
 
 Scaling up the computational resources is a big advantage for doing
 certain large scale calculations on OSG. Consider the extensive
@@ -20,7 +20,7 @@ In this section, we will see how to scale up the calculations with
 simple example. Once we understand the basic HTCondor script, it is easy
 to scale up.
 
-### Background
+## Background
 
 For this example, we will use computational methods to estimate pi. First,
 we will define a square inscribed by a unit circle from which we will 
@@ -38,37 +38,42 @@ First, we'll need to create a working directory, you can either run
     $ mkdir tutorial-ScalingUp-R
     $ cd tutorial-ScalingUp-R
 
-### Test the R Script
+## Create and test an R Script
 
 Create an R script by typing the following into a file called `mcpi.R`:
+
+	args = commandArgs(trailingOnly = TRUE)
+	iternum = as.numeric(args[[1]]) + 100
 
 	montecarloPi <- function(trials) {
 	  count = 0
 	  for(i in 1:trials) {
-	    if((runif(1,0,1)^2 + runif(1,0,1)^2)<1) {
-	      count = count + 1
-		    }
+		if((runif(1,0,1)^2 + runif(1,0,1)^2)<1) {
+		  count = count + 1
+		}
 	  }
 	  return((count*4)/trials)
 	}
-	
-	montecarloPi(1000)
+ 
+	montecarloPi(iternum)
 
-Now, test your R script to ensure it runs as expected:
 
-	$ module load r
-	$ Rscript --no-save mcpi.R
+If you want to test the script, start an R container, and then run 
+the script using `Rscript`: 
+
+	$ singularity shell \
+	   /cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0
+	Singularity osgvo-r:3.5.0:~> Rscript mcpi.R 10
 	[1] 3.14
+	Singularity osgvo-r:3.5.0:~> exit
+	$ 
 
 If we were running a more intensive script, we would want to test our pipeline 
 with a shortened, test script first.
 
-Now that we know our script works as expected, we can begin building the 
-necessary scripts so we can run the jobs on OSG.
+## Create an Executable
 
-### Build the HTCondor Job
-
-As discussed in the Run R Jobs tutorial, we need to prepare the job 
+As discussed in the [Run R Jobs tutorial](5000674219), we need to prepare the job 
 execution and the job submission scripts. First, make a wrapper script 
 called `R-wrapper.sh`. 
 
@@ -77,15 +82,13 @@ called `R-wrapper.sh`.
 	# set TMPDIR variable
 	export TMPDIR=$_CONDOR_SCRATCH_DIR
 
-	module load r
-	Rscript --no-save mcpi.R
+	Rscript mcpi.R
 
-This script will load the required module and execute our R script.
+This script will set the location for temporary files and execute our R script.
 
 Test the wrapper script to ensure it works:
 
-	$ ./R-wrapper.sh mcpi.R
-	[1] 3.14524
+## Create a Submit File and Log Directory
 
 Now that we have both our R script and wrapper script written and tested, 
 we can begin building the submit file for our job. If we want to submit several 
@@ -95,15 +98,16 @@ values to create unique files for each process in our job.
 
 Create a submit file named `R.submit`:
 
+	+SingularityImage = "/cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0"
+
 	executable = R-wrapper.sh
-	arguments = mcpi.R $(Process)
-	transfer_input_files = mcpi.R     # mcpi.R is the R program we want to run
+	arguments = $(Process)
+	transfer_input_files = mcpi.R    
 		
 	log = log/job.log.$(Cluster).$(Process)
 	error = log/job.error.$(Cluster).$(Process)
-	output = log/job.out.$(Cluster).$(Process)  
-		
-	requirements = HAS_MODULES == True && OSGVO_OS_STRING == "RHEL 7" && Arch == "X86_64"
+	output = log/mcpi.out.$(Cluster).$(Process)  
+	
 	queue 100
 
 Note the `queue 100`.  This tells Condor to enqueue 100 copies of this job
@@ -114,31 +118,34 @@ hold these files for us.
 
 	$ mkdir log
 
+## Submit the Jobs
+
 Now it is time to submit our job! You'll see something like the following upon submission:
 
 	$ condor_submit R.submit
 	Submitting job(s).........................
 	100 job(s) submitted to cluster 837.
 
-Apply your `condor_q` and `connect watch` knowledge to see this job
+Apply your `condor_q` knowledge to see this job
 progress. Check your `log` folder to see the individual output files.
 
-### Post process⋅
+## Post Process⋅
 
 Once the jobs are completed, you can use the information in the output files 
 to calculate an average of all of our computed estimates of Pi.
 
 To see this, we can use the command:
 
-	$ cat mcpi*.out | awk '{ sum += $2; print $2"   "NR} END { print "---------------\n Grand Average = " sum/NR }'
+	$ cat log/mcpi*.out* | awk '{ sum += $2; print $2"   "NR} END { print "---------------\n Grand Average = " sum/NR }'
 
-## Key Points
-- [x] Scaling up the computational resources on OSG is crucial to taking full advantage of grid computing.
-- [x] Changing the value of `Queue` allows the user to scale up the resources.
-- [x] `Arguments` allows you to pass parameters to a job script.
-- [x] `$(Cluster)` and `$(Process)` can be used to name log files uniquely.
+# Key Points
 
-## Getting Help
+- Scaling up the computational resources on OSG is crucial to taking full advantage of grid computing.
+- Changing the value of `Queue` allows the user to scale up the resources.
+- `Arguments` allows you to pass parameters to a job script.
+- `$(Cluster)` and `$(Process)` can be used to name log files uniquely.
+
+# Getting Help
 
 For assistance or questions, please email the OSG User Support team at 
 <mailto:support@opensciencegrid.org>.
