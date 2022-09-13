@@ -73,7 +73,7 @@ with a shortened, test script first.
 
 ## Create an Executable
 
-As discussed in the [Run R Jobs tutorial](5000674219), we need to prepare the job 
+As discussed in the [Run R Jobs tutorial](https://portal.osg-htc.org/documentation/software_examples_for_osg/r/tutorial-ScalingUp-R/), we need to prepare the job 
 execution and the job submission scripts. First, make a wrapper script 
 called `R-wrapper.sh`. 
 
