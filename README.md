@@ -1,8 +1,9 @@
-[title]: - "Scaling up compute resources"
-[TOC]
+---
+ospool:
+    path: software_examples/r/tutorial-ScalingUp-R/README.md
+---
 
-
-# Overview
+# Scaling up compute resources
 
 Scaling up the computational resources is a big advantage for doing
 certain large scale calculations on OSG. Consider the extensive
