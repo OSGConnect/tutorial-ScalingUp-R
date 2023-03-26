@@ -39,7 +39,9 @@ First, we'll need to create a working directory, you can either run
 
 ## Create and test an R Script
 
-Create an R script by typing the following into a file called `mcpi.R`:
+Our code is a simple R script that does the estimation. It takes in a single argument, simply 
+for the purposes of differentiating the jobs. If you didn't run the tutorial command to 
+generate files, create an R script by typing the following into a file called `mcpi.R`:
 
 	#!/usr/bin/env Rscript
 	
@@ -83,7 +85,8 @@ job. An easy way to do this is to use the Cluster and Process ID
 values assigned by HTCondor to create unique files for each job in our 
 overall workflow.
 
-Create a submit file named `R.submit`:
+If you did not download the files for this example with the `tutorial` command, 
+create a submit file named `R.submit`:
 
 	universe = vanilla
 	+SingularityImage = "/cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0"
