@@ -11,15 +11,13 @@ sampling for a multi-dimensional Monte Carlo integration or molecular
 dynamics simulation with several initial conditions. These type of
 calculations require submitting lot of jobs.
 
-In the previous example, we submitted the job to a single worker
-machine. About a million CPU hours per day are available to OSG users
+About a million CPU hours per day are available to OSG users
 on an opportunistic basis.  Learning how to scale up and control large
 numbers of jobs to realizing the full potential of distributed high
 throughput computing on the OSG.
 
-In this section, we will see how to scale up the calculations with
-simple example. Once we understand the basic HTCondor script, it is easy
-to scale up.
+In this section, we will see how to scale up calculations with
+simple example. 
 
 ## Background
 
@@ -43,6 +41,8 @@ First, we'll need to create a working directory, you can either run
 
 Create an R script by typing the following into a file called `mcpi.R`:
 
+	#!/usr/bin/env Rscript
+	
 	args = commandArgs(trailingOnly = TRUE)
 	iternum = as.numeric(args[[1]]) + 100
 
@@ -58,66 +58,58 @@ Create an R script by typing the following into a file called `mcpi.R`:
  
 	montecarloPi(iternum)
 
+The header at the top of the file indicates that this script is 
+meant to be run using R. 
 
-If you want to test the script, start an R container, and then run 
-the script using `Rscript`: 
-
-	$ singularity shell \
-	   /cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0
-	Singularity osgvo-r:3.5.0:~> Rscript mcpi.R 10
-	[1] 3.14
-	Singularity osgvo-r:3.5.0:~> exit
-	$ 
+> If you want to test the script, start an R container, and then run 
+> the script using `Rscript`: 
+> 
+>     $ singularity shell \
+>	   /cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0
+>     Singularity osgvo-r:3.5.0:~> Rscript mcpi.R 10
+>     [1] 3.14
+>     Singularity osgvo-r:3.5.0:~> exit
+>     $ 
 
 If we were running a more intensive script, we would want to test our pipeline 
 with a shortened, test script first.
 
-## Create an Executable
-
-As discussed in the [Run R Jobs tutorial](https://portal.osg-htc.org/documentation/software_examples_for_osg/r/tutorial-ScalingUp-R/), we need to prepare the job 
-execution and the job submission scripts. First, make a wrapper script 
-called `R-wrapper.sh`. 
-
-	#!/bin/bash
-	
-	# set TMPDIR variable
-	export TMPDIR=$_CONDOR_SCRATCH_DIR
-
-	Rscript mcpi.R
-
-This script will set the location for temporary files and execute our R script.
-
-Test the wrapper script to ensure it works:
-
 ## Create a Submit File and Log Directory
 
-Now that we have both our R script and wrapper script written and tested, 
+Now that we have our R script written and tested, 
 we can begin building the submit file for our job. If we want to submit several 
 jobs, we need to track log, out and error files for each
 job. An easy way to do this is to use the Cluster and Process ID
-values to create unique files for each process in our job.
+values assigned by HTCondor to create unique files for each job in our 
+overall workflow.
 
 Create a submit file named `R.submit`:
 
+	universe = vanilla
 	+SingularityImage = "/cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0"
 
-	executable = R-wrapper.sh
+	executable = mcpi.R
 	arguments = $(Process)
-	transfer_input_files = mcpi.R    
-		
-	log = log/job.log.$(Cluster).$(Process)
-	error = log/job.error.$(Cluster).$(Process)
-	output = log/mcpi.out.$(Cluster).$(Process)  
-	
+
+	#transfer_input_files = 
+	should_transfer_files = YES
+	when_to_transfer_output = ON_EXIT
+
+	output = output/mcpi.out.$(Cluster).$(Process)
+
+	log = logs/job.log.$(Cluster).$(Process)
+	error = logs/job.error.$(Cluster).$(Process)
+
+	request_cpus = 1
+	request_memory = 1GB
+	request_disk = 1GB
+
 	queue 100
 
 Note the `queue 100`.  This tells Condor to enqueue 100 copies of this job
 as one cluster. Also, notice the use of `$(Cluster)` and `$(Process)` to specify unique 
 output files. HTCondor will replace these with the Cluster and Process ID numbers for each 
-individual process within the cluster. Let's make the `log` directory that will 
-hold these files for us.
-
-	$ mkdir log
+individual process within the cluster. 
 
 ## Submit the Jobs
 
@@ -128,7 +120,8 @@ Now it is time to submit our job! You'll see something like the following upon s
 	100 job(s) submitted to cluster 837.
 
 Apply your `condor_q` knowledge to see this job
-progress. Check your `log` folder to see the individual output files.
+progress. Check your `logs` folder to see the error and HTCondor log 
+files and the `output` folder to see the results of the scripts. 
 
 ## Post Process⋅
 
@@ -137,7 +130,7 @@ to calculate an average of all of our computed estimates of Pi.
 
 To see this, we can use the command:
 
-	$ cat log/mcpi*.out* | awk '{ sum += $2; print $2"   "NR} END { print "---------------\n Grand Average = " sum/NR }'
+	$ cat output/mcpi*.out* | awk '{ sum += $2; print $2"   "NR} END { print "---------------\n Grand Average = " sum/NR }'
 
 # Key Points
 
