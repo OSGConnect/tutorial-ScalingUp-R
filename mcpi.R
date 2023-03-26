@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 args = commandArgs(trailingOnly = TRUE)
 iternum = as.numeric(args[[1]]) + 100
 
