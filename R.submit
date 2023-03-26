@@ -1,13 +1,17 @@
 universe = vanilla
-
-log = log/job.log.$(Cluster).$(Process)
-output = log/mcpi.out.$(Cluster).$(Process)
-error = log/job.error.$(Cluster).$(Process)
-
 +SingularityImage = "/cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0"
-executable = R-wrapper.sh
+
+executable = mcpi.R
 arguments = $(Process)
-transfer_input_files = mcpi.R
+
+#transfer_input_files = 
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+output = output/mcpi.out.$(Cluster).$(Process)
+
+log = logs/job.log.$(Cluster).$(Process)
+error = logs/job.error.$(Cluster).$(Process)
 
 request_cpus = 1
 request_memory = 1GB
