@@ -32,7 +32,7 @@ CPU-intensive exercise (but bad for a real estimation!).
 ## Set up an R Job
 
 First, we'll need to create a working directory, you can either run 
-`$ tutorial ScalingUp-R` or type the following:
+`$ git clone https://github.com/OSGConnect/tutorial-ScalingUp-R` or type the following:
 
     $ mkdir tutorial-ScalingUp-R
     $ cd tutorial-ScalingUp-R
