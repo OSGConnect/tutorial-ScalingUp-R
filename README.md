@@ -70,7 +70,7 @@ called `mcpi.R` and add the following contents:
  
 	montecarloPi(iternum)
 
-The header at the top of the file (starting with `#!`) indicates that this script is 
+The header at the top of the file (the line starting with `#!`) indicates that this script is 
 meant to be run using R. 
 
 If we were running a more intensive script, we would want to test our pipeline 
@@ -86,7 +86,7 @@ with a shortened, test script first.
 >     Singularity :~/tutorial-ScalingUp-R> exit
 >     $ 
 
-## Create a Submit File and Log Directory
+## Create a Submit File and Log Directories
 
 Now that we have our R script written and tested, 
 we can begin building the submit file for our job. If we want to submit several 
@@ -140,8 +140,8 @@ Now it is time to submit our job! You'll see something like the following upon s
 	Submitting job(s).........................
 	100 job(s) submitted to cluster 837.
 
-Apply your `condor_q` knowledge to see this job
-progress. Check your `logs` folder to see the error and HTCondor log 
+Apply your `condor_q` knowledge to see the progress of these jobs. 
+Check your `logs` folder to see the error and HTCondor log 
 files and the `output` folder to see the results of the scripts. 
 
 ## Post Process
