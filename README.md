@@ -23,7 +23,7 @@ simple example. To download the materials for this tutorial, use the command
 
 ## Background
 
-For this example, we will use computational methods to estimate pi. First,
+For this example, we will use computational methods to estimate &pi;. First,
 we will define a square inscribed by a unit circle from which we will 
 randomly sample points. The ratio of the points outside the circle to 
 the points in the circle is calculated, which approaches &pi;/4. 
