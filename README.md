@@ -6,15 +6,15 @@ ospool:
 # Scaling up compute resources
 
 Scaling up the computational resources is a big advantage for doing
-certain large scale calculations on OSG. Consider the extensive
+certain large scale calculations on OSPool. Consider the extensive
 sampling for a multi-dimensional Monte Carlo integration or molecular
 dynamics simulation with several initial conditions. These type of
 calculations require submitting a lot of jobs.
 
-About a million CPU hours per day are available to OSG users
+About a million CPU hours per day are available to OSPool users
 on an opportunistic basis. Learning how to scale up and control large
 numbers of jobs is key to realizing the full potential of distributed high
-throughput computing on the OSG.
+throughput computing on the OSPool.
 
 In this tutorial, we will see how to scale up calculations for a
 simple example. To download the materials for this tutorial, use the command
@@ -155,7 +155,7 @@ To see this, we can use the command:
 
 # Key Points
 
-- Scaling up the number of jobs is crucial for taking full advantage of the computational resources of the OSG.
+- Scaling up the number of jobs is crucial for taking full advantage of the computational resources of the OSPool.
 - Changing the `queue` statement allows the user to scale up the resources.
 - The `arguments` option can be used to pass parameters to a job script.
 - The submit variables `$(Cluster)` and `$(Process)` can be used to name log files uniquely.
