@@ -1,6 +1,5 @@
 universe = container
 container_image = /cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0
-#+SingularityImage = "/cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0"
 
 executable = mcpi.R
 arguments = $(Process)
