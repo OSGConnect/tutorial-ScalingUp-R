@@ -99,7 +99,7 @@ In this example, the submit file is called `R.submit`.
 If you did not download the tutorial files, create a submit file named `R.submit`
 and add the following contents:
 
-	+SingularityImage = "/cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0"
+	container_image = /cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-r:3.5.0
 
 	executable = mcpi.R
 	arguments = $(Process)
